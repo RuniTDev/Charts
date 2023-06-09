@@ -380,14 +380,6 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
         let drawBorder = dataSet.barBorderWidth > 0
 
-        let gradientStart = dataSet.gradientEnd.isInfinite ?
-            CGPoint(x: boundingBox.minX, y: boundingBox.minY) :
-            dataSet.gradientEnd.applying(matrix)
-
-        let gradientEnd = dataSet.gradientStart.isInfinite ?
-            CGPoint(x: boundingBox.minX, y: boundingBox.maxY) :
-            dataSet.gradientStart.applying(matrix)
-
         var gradientColorComponents: [CGFloat] = []
         var gradientLocations: [CGFloat] = []
 
@@ -447,6 +439,14 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
             guard viewPortHandler.isInBoundsLeft(barRect.maxX) else { continue }
             guard viewPortHandler.isInBoundsRight(barRect.minX) else { break }
+            
+            let gradientStart = dataSet.gradientEnd.isInfinite ?
+                CGPoint(x: barRect.minX, y: barRect.minY) :
+                dataSet.gradientEnd.applying(matrix)
+
+            let gradientEnd = dataSet.gradientStart.isInfinite ?
+                CGPoint(x: barRect.minX, y: barRect.maxY) :
+                dataSet.gradientStart.applying(matrix)
 
             let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: barRect.width * dataSet.barCornerRadiusFactor, height: barRect.width * dataSet.barCornerRadiusFactor))
             context.beginPath()
