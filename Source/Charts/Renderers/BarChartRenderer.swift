@@ -385,20 +385,6 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
         for position in gradientPositions.reversed()
         {
-//            let location = CGPoint(x: boundingBox.minX, y: position)
-//                .applying(matrix)
-//            let normalizedLocation =
-//                (location.y - boundingBox.minY) / (boundingBox.maxY - boundingBox.minY)
-//            switch normalizedLocation {
-//            case ..<0:
-//                gradientLocations.append(0)
-//            case 0..<1:
-//                gradientLocations.append(normalizedLocation)
-//            case 1...:
-//                gradientLocations.append(1)
-//            default:
-//                assertionFailure()
-//            }
             gradientLocations.append(position)
         }
 
@@ -409,6 +395,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
         for (barIndex, barRect) in buffer.enumerated()
         {
             let isSingleGradientColor = dataSet.gradientColors.count == 1
+            let isPositive = dataSet.entryForIndex(barIndex)?.y ?? 0 > 0
             var gradientColors: [NSUIColor]
             if isSingleGradientColor
             {
@@ -417,7 +404,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 gradientColors = dataSet.gradientColor(atIndex: barIndex)
             }
             
-            for color in gradientColors.reversed()
+            for color in isPositive ? gradientColors.reversed() : gradientColors
             {
                 guard let (r, g, b, a) = color.nsuirgba else {
                     continue
@@ -448,7 +435,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 CGPoint(x: barRect.minX, y: barRect.maxY) :
                 dataSet.gradientStart.applying(matrix)
 
-            let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: barRect.width * dataSet.barCornerRadiusFactor, height: barRect.width * dataSet.barCornerRadiusFactor))
+            let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: isPositive ? [.topLeft, .topRight] : [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: barRect.width * dataSet.barCornerRadiusFactor, height: barRect.width * dataSet.barCornerRadiusFactor))
             context.beginPath()
             context.addPath(bezierPath.cgPath)
             context.clip()
