@@ -450,7 +450,6 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: barRect.width * dataSet.barCornerRadiusFactor, height: barRect.width * dataSet.barCornerRadiusFactor))
             context.beginPath()
             context.addPath(bezierPath.cgPath)
-            context.addRect(barRect)
             context.clip()
             context.drawLinearGradient(gradient, start: gradientStart, end: gradientEnd, options: [])
 
