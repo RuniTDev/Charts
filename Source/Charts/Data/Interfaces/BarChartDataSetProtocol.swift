@@ -46,8 +46,12 @@ public protocol BarChartDataSetProtocol: BarLineScatterCandleBubbleChartDataSetP
     var drawBarGradientEnabled: Bool { get set }
 
     var gradientPositions: [CGFloat]? { get set }
+    
+    var gradientColors: [[NSUIColor]] { get set }
 
     var gradientStart: CGPoint { get set }
 
     var gradientEnd: CGPoint { get set }
+    
+    func gradientColor(atIndex: Int) -> [NSUIColor]
 }

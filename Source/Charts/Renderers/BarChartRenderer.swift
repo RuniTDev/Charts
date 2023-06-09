@@ -409,29 +409,38 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             }
         }
 
-        for color in dataSet.colors.reversed()
-        {
-            guard let (r, g, b, a) = color.nsuirgba else {
-                continue
-            }
-            gradientColorComponents += [r, g, b, a]
-        }
-
-        let baseColorSpace = CGColorSpaceCreateDeviceRGB()
-        guard let gradient = CGGradient(
-            colorSpace: baseColorSpace,
-            colorComponents: &gradientColorComponents,
-            locations: &gradientLocations,
-            count: gradientLocations.count) else {
-                return
-        }
-
         // In case the chart is stacked, we need to accomodate individual bars within accessibilityOrdereredElements
         let isStacked = dataSet.isStacked
         let stackSize = isStacked ? dataSet.stackSize : 1
 
         for (barIndex, barRect) in buffer.enumerated()
         {
+            let isSingleGradientColor = dataSet.gradientColors.count == 1
+            var gradientColors: [NSUIColor]
+            if isSingleGradientColor
+            {
+                gradientColors = dataSet.gradientColor(atIndex: 0)
+            } else {
+                gradientColors = dataSet.gradientColor(atIndex: barIndex)
+            }
+            
+            for color in gradientColors.reversed()
+            {
+                guard let (r, g, b, a) = color.nsuirgba else {
+                    continue
+                }
+                gradientColorComponents += [r, g, b, a]
+            }
+
+            let baseColorSpace = CGColorSpaceCreateDeviceRGB()
+            guard let gradient = CGGradient(
+                colorSpace: baseColorSpace,
+                colorComponents: &gradientColorComponents,
+                locations: &gradientLocations,
+                count: gradientLocations.count) else {
+                    continue
+            }
+            
             context.saveGState()
             defer { context.restoreGState() }
 

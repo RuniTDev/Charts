@@ -112,8 +112,10 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, BarChartData
     // MARK: - Styling functions and accessors
     
     open var drawBarGradientEnabled = false
-
+    
     open var gradientPositions: [CGFloat]?
+    
+    open var gradientColors = [[NSUIColor]]()
 
     open var gradientStart: CGPoint = .infinite
 
@@ -149,5 +151,17 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, BarChartData
         copy.barCornerRadiusFactor = barCornerRadiusFactor
         copy.highlightAlpha = highlightAlpha
         return copy
+    }
+    
+    /// - Returns: The color at the given index of the DataSet's color array.
+    /// This prevents out-of-bounds by performing a modulus on the color index, so colours will repeat themselves.
+    open func gradientColor(atIndex index: Int) -> [NSUIColor]
+    {
+        var index = index
+        if index < 0
+        {
+            index = 0
+        }
+        return gradientColors[index % gradientColors.count]
     }
 }
