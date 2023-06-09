@@ -393,20 +393,21 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
         for position in gradientPositions.reversed()
         {
-            let location = CGPoint(x: boundingBox.minX, y: position)
-                .applying(matrix)
-            let normalizedLocation =
-                (location.y - boundingBox.minY) / (boundingBox.maxY - boundingBox.minY)
-            switch normalizedLocation {
-            case ..<0:
-                gradientLocations.append(0)
-            case 0..<1:
-                gradientLocations.append(normalizedLocation)
-            case 1...:
-                gradientLocations.append(1)
-            default:
-                assertionFailure()
-            }
+//            let location = CGPoint(x: boundingBox.minX, y: position)
+//                .applying(matrix)
+//            let normalizedLocation =
+//                (location.y - boundingBox.minY) / (boundingBox.maxY - boundingBox.minY)
+//            switch normalizedLocation {
+//            case ..<0:
+//                gradientLocations.append(0)
+//            case 0..<1:
+//                gradientLocations.append(normalizedLocation)
+//            case 1...:
+//                gradientLocations.append(1)
+//            default:
+//                assertionFailure()
+//            }
+            gradientLocations.append(position)
         }
 
         // In case the chart is stacked, we need to accomodate individual bars within accessibilityOrdereredElements
